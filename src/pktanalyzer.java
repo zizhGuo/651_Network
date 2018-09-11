@@ -3,12 +3,12 @@ import java.util.Scanner;
 import java.util.*;
 import java.math.*;
 public class pktanalyzer {
-
+	private static String hexStr =  "0123456789ABCDEF"; 
 	public static void main(String[] args) {
 		//Scanner scanner = new Scanner(System.in);
 		//String fileName = scanner.nextLine();
 		//scanner.close();
-		String fileLocation = "C:\\Users\\William\\eclipse-workspace\\651_Network\\bin\\new_tcp_packet1.bin";
+		String fileLocation = "C:\\Users\\William\\eclipse-workspace\\651_Network\\bin\\new_udp_packet1.bin";
 		//System.out.println(fileName);
 		ReadFile2(fileLocation);
 		
@@ -28,19 +28,21 @@ public class pktanalyzer {
 	public static void ReadFile2(String fileName) {
 		File file = new File(fileName);
 		FileInputStream in = null;
-		DataInputStream din = null;
 		byte[] content = new byte[1024];
 		try {
 			in = new FileInputStream(file);
 			in.read(content);
-			//din = new DataInputStream(in);
-			//din.read(content);
             for (int i = 0; i < content.length; i++) {
-            	System.out.println((content[i]&0xF0)>>4);
-            	System.out.println(content[i]&0x0F); 
+            	String result = "";
+            	String hex = "";
+            	hex = String.valueOf(hexStr.charAt((content[i]&0xF0)>>4));
+            	hex += String.valueOf(hexStr.charAt(content[i]&0x0F));
+            	System.out.println(hex);
+            	//System.out.println(content[i]);
+            	//System.out.println((content[i]&0xF0)>>4);
+            	//System.out.println(content[i]&0x0F);
             }           
-		}
-		
+		}		
 		catch (IOException e){
 			e.printStackTrace();	
 		}		
