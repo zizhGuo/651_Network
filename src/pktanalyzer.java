@@ -1,103 +1,108 @@
 import java.io.*;
+import java.lang.Integer;
+import java.lang.reflect.Array;
 import java.util.Scanner;
 import java.util.*;
 import java.math.*;
+import java.util.Arrays;
+
 public class pktanalyzer {
-	private static String hexStr =  "0123456789ABCDEF"; 
+	private static String hexStr =  "0123456789abcdef"; 
+	
 	public static void main(String[] args) {
 		//Scanner scanner = new Scanner(System.in);
 		//String fileName = scanner.nextLine();
 		//scanner.close();
+		
 		String fileLocation = "C:\\Users\\William\\eclipse-workspace\\651_Network\\bin\\new_udp_packet1.bin";
-		//System.out.println(fileName);
-		ReadFile2(fileLocation);
 		
+		byte[] rawData = new byte[2000];
+		rawData = ReadFile(fileLocation);
 		
-//		try {
-//			byte[] content = new byte[2];
-//			content = readFileToByteArray(fileLocation);
-//			String info = content.toString();
-//			System.out.println(info);
-//			}
-//		catch (IOException e) {
-//			e.printStackTrace();		
-//		}
-		//ReadFile(fileName);
+		String[] hexdata = new String[2000];
+		hexdata = BytetoString(rawData);
+		
+		EthenetHeader eHeader = new EthenetHeader(rawData, hexdata);
+		eHeader.PrintResult();
 
 	}
-	public static void ReadFile2(String fileName) {
+	public static byte[] ReadFile(String fileName) {
 		File file = new File(fileName);
 		FileInputStream in = null;
-		byte[] content = new byte[1024];
+		//System.out.println(file.length());
+		byte[] content = new byte[(int)file.length()];
 		try {
 			in = new FileInputStream(file);
-			in.read(content);
-            for (int i = 0; i < content.length; i++) {
-            	String result = "";
-            	String hex = "";
-            	hex = String.valueOf(hexStr.charAt((content[i]&0xF0)>>4));
-            	hex += String.valueOf(hexStr.charAt(content[i]&0x0F));
-            	System.out.println(hex);
-            	//System.out.println(content[i]);
-            	//System.out.println((content[i]&0xF0)>>4);
-            	//System.out.println(content[i]&0x0F);
-            }           
+			in.read(content);			
+			in.close();
+			return content;
 		}		
 		catch (IOException e){
-			e.printStackTrace();	
-		}		
-		
+			e.printStackTrace();
+			return null;
+		}
+	}
+	public static int UnsignedBytetoInt(byte bt) {		
+		return bt & 0xFF;
+	}
+	public static String InttoHex(int num) {		
+		return Integer.toHexString(num);
 	}
 	
-	public static void ReadFile(String fileName) {
-		File file = new File(fileName);
-		Long filelength = file.length();
-		byte[] filecontent = new byte[filelength.intValue()];
-		FileInputStream in = null;
-		try {                    
-            in = new FileInputStream(file);            
-            in.read(filecontent);
-            for (int i = 0; i < filecontent.length; i++) {
-            	System.out.println(filecontent[i]);            	
-            }
-            
-			//InputStreamReader read = new InputStreamReader();            
-            //BufferedReader buff = new BufferedReader(read);
-                        
-            //byte[] content = new byte[1024];           
-            //in.read(content);
-            //while ()
-            String[] fileContentArr = new String(filecontent).split("\r\n");
-            System.out.println(fileContentArr);
-//            int tempbyte;
-//            while ((tempbyte = in.read()) != -1) {
-//            	System.out.println(tempbyte);
-//            }
-            //}            
-            //System.out.write(content);
-            in.close();
+	public static String[] BytetoString(byte[] btarr) {
+		String[] strarr = new String[btarr.length];
+		String hex = "";
+		for (int i = 0; i < btarr.length; i++) {
+			hex = String.valueOf(hexStr.charAt((btarr[i]&0xF0)>>4));
+			hex += String.valueOf(hexStr.charAt(btarr[i]&0x0F));
+			strarr[i] = hex;
 		}
-		catch (IOException e){
-			e.printStackTrace();	
-		}			
+		return strarr;
 	}
-	public static void copy(InputStream input, 
-	        OutputStream output) throws IOException{
-	    byte[] buf = new byte[4096];
-	    int bytesRead = 0; 
-	    while((bytesRead = input.read(buf))!=-1){
-	        output.write(buf, 0, bytesRead);
-	    }
+}
+class EthenetHeader{
+	byte[] rawdata = null;
+	String[] dstmac = new String[6];
+	String[] srcmac = new String[6];
+	String[] eth_type;
+	
+	public EthenetHeader(byte[] rawdataHeader, String[] HexdataHeader) {
+		
+		this.rawdata = rawdataHeader;
+		this.dstmac = Arrays.copyOfRange(HexdataHeader, 0, 6);
+		this.srcmac = Arrays.copyOfRange(HexdataHeader, 6, 12);
+		this.eth_type = Arrays.copyOfRange(HexdataHeader, 12, 14);
 	}
-	public static byte[] readFileToByteArray(String fileName) throws IOException{
-	    InputStream input = new FileInputStream(fileName);
-	    ByteArrayOutputStream output = new ByteArrayOutputStream();
-	    try{
-	        copy(input, output);
-	        return output.toByteArray();
-	    }finally{
-	        input.close();
-	    }
+	public void PrintResult() {
+		System.out.println("ETHER: ----- Ether Header ----- ");
+		System.out.println("ETHER:                          ");
+		System.out.println("ETHER:  Packet size = " + rawdata.length + " bytes");
+		System.out.println("ETHER:  Destination = " + dstmac[0] + ":"+ dstmac[1] + ":"+ dstmac[2] + ":"+ dstmac[3] + ":"+ dstmac[4] + ":"+ dstmac[5] + ",");
+		System.out.println("ETHER:  Source      = " + srcmac[0] + ":"+ srcmac[1] + ":"+ srcmac[2] + ":"+ srcmac[3] + ":"+ srcmac[4] + ":"+ srcmac[5] + ",");
+		System.out.println("ETHER:  Ethertype = " + eth_type[0] + eth_type[1]);
+		System.out.println("ETHER:");
+	}	
+}
+class IPHeader{
+	byte[] rawdata = null;
+	String[] dstmac = new String[6];
+	String[] srcmac = new String[6];
+	String[] eth_type;
+	
+	public IPHeader(byte[] rawdataHeader, String[] HexdataHeader) {
+		
+		this.rawdata = rawdataHeader;
+		this.dstmac = Arrays.copyOfRange(HexdataHeader, 0, 6);
+		this.srcmac = Arrays.copyOfRange(HexdataHeader, 6, 12);
+		this.eth_type = Arrays.copyOfRange(HexdataHeader, 12, 14);
 	}
-
+	public void PrintResult() {
+		System.out.println("ETHER: ----- Ether Header ----- ");
+		System.out.println("ETHER:                          ");
+		System.out.println("ETHER:  Packet size = " + rawdata.length + "bytes");
+		System.out.println("ETHER:  Destination = " + dstmac[0] + ":"+ dstmac[1] + ":"+ dstmac[2] + ":"+ dstmac[3] + ":"+ dstmac[4] + ":"+ dstmac[5] + ",");
+		System.out.println("ETHER:  Source      = " + srcmac[0] + ":"+ srcmac[1] + ":"+ srcmac[2] + ":"+ srcmac[3] + ":"+ srcmac[4] + ":"+ srcmac[5] + ",");
+		System.out.println("ETHER:  Ethertype = " + eth_type[0] + eth_type[1]);
+		System.out.println("ETHER:");
+	}
 }
