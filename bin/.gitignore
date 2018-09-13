@@ -4,3 +4,4 @@
 /IPHeader$TCPHeader.class
 /TCPHeader.class
 /UDPHeader.class
+/ICMPHeader.class

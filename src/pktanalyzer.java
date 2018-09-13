@@ -8,6 +8,7 @@ import org.omg.CORBA.PRIVATE_MEMBER;
 
 import java.util.*;
 import java.math.*;
+import java.net.ProtocolException;
 import java.util.Arrays;
 
 public class pktanalyzer {
@@ -29,10 +30,23 @@ public class pktanalyzer {
 					
 					IPHeader ipHeader = new IPHeader(rawData, hexdata);
 					ipHeader.PrintResult();
-					
-					TCPHeader tcpHeader = new TCPHeader(rawData, hexdata);
-					tcpHeader.PrintResult();
-					break;
+			
+					if ((rawData[23]&0xff) == 6) {						
+						TCPHeader tcpHeader = new TCPHeader(rawData, hexdata);
+						tcpHeader.PrintResult();
+						break;
+					}
+					else if((rawData[23]&0xff) == 17) {
+						UDPHeader udpHeader = new UDPHeader(rawData, hexdata);
+						udpHeader.PrintResult();
+						break;
+					}
+					else if ((rawData[23]&0xff) == 1){
+						ICMPHeader icmpHeader = new ICMPHeader(rawData, hexdata);
+						icmpHeader.PrintResult();
+						break;
+					}
+
 				}
 				catch (Exception e) {
 					System.out.println(e);					
