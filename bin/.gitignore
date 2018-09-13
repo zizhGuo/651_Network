@@ -3,3 +3,4 @@
 /pktanalyzer.class
 /IPHeader$TCPHeader.class
 /TCPHeader.class
+/UDPHeader.class
