@@ -1,12 +1,25 @@
+/* CSCI- 651 Computing Network
+ * 
+ * Project 1
+ * 
+ * Author: Zizhun Guo
+ * 
+ *  Part 2/5 (Ethenet Header)
+ * */
+
 import java.util.Arrays;
 
 class EthenetHeader{
 	byte[] rawdata = null;
 	String[] hexdata = null;
-	String[] dstmac = new String[6];
-	String[] srcmac = new String[6];
-	String[] eth_type;
+	String[] dstmac = new String[6];          // Destination
+	String[] srcmac = new String[6];          // Source
+	String[] eth_type;                        // 
 	
+	/*
+	   * This method inputs an array of bytes, and an array of String.
+	   * As of the construtor.
+	   	*/
 	public EthenetHeader(byte[] rawdataHeader, String[] HexdataHeader) {
 		
 		this.rawdata = rawdataHeader;
@@ -15,6 +28,10 @@ class EthenetHeader{
 		this.srcmac = Arrays.copyOfRange(HexdataHeader, 6, 12);
 		this.eth_type = Arrays.copyOfRange(HexdataHeader, 12, 14);
 	}
+	/*
+	   * This method is for printing out the info
+	   * 
+	   	*/
 	public void PrintResult() {
 		System.out.println("ETHER: ----- Ether Header ----- ");
 		System.out.println("ETHER:                          ");

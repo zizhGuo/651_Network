@@ -1,25 +1,37 @@
+/* CSCI- 651 Computing Network
+ * 
+ * Project 1
+ * 
+ * Author: Zizhun Guo
+ * 
+ *  Part 3/5 (IP Header)
+ * */
 class IPHeader{
 	byte[] rawdata = null;
 	String[] hexdata = null;
 	
-	int version;
-	int hl;
-	String tos;
-	boolean delay = false;
-	boolean throughout = false;
-	boolean reliability = false;
-	int tl;
-	int id;
-	boolean df = false;
-	boolean mf = false;
-	String flag;
-	int fragOffset;
-	int ttl;
-	int protocol;
-	String hc;
-	String sa;
-	String da;
+	int version;                            // Version (4 as IPV4)
+	int hl;                                 // Header Length (Bytes)
+	String tos;                             // Type of Services
+	boolean delay = false;                  // Delay Bit (1/0)
+	boolean throughout = false;             // Throughtout Bit (1/0)
+	boolean reliability = false;            // Reliability (1/0)
+	int tl;                                 // Total Length (Bytes)
+	int id;                                 // Identification
+	boolean df = false;						// Dont't Fragment
+	boolean mf = false;						// More Fragment
+	String flag;							// Fragment Flag (2 bits)
+	int fragOffset;							// Fragment Offset
+	int ttl;								// Time to Live (seconds/hop)
+	int protocol;							// Protocol Type
+	String hc;								// Header Checksum
+	String sa;								// Source Address
+	String da;								// Destination Address
 	
+	/*
+	   * This method inputs an array of bytes, and an array of String.
+	   * As of the construtor.
+	   	*/
 	public IPHeader(byte[] rawdataHeader, String[] HexdataHeader) {
 		
 		this.rawdata = rawdataHeader;
@@ -75,15 +87,28 @@ class IPHeader{
 		this.da = String.valueOf((rawdataHeader[30] & 0xff)) + "." + String.valueOf((rawdataHeader[31] & 0xff)) + "." + String.valueOf((rawdataHeader[32]  & 0xff))+ "." + String.valueOf((rawdataHeader[33] & 0xff));
 		
 	}
+	
+	/*
+	   * This method inputs an array of bytes, and the starting offset index.
+	   * @returnthe integer transfered from the inputs bytes
+	   	*/
 	private int BytetoInt(byte[] bt, int offset) {
 		return (int)((bt[offset] & 0xFF) << 8) | (bt[offset + 1] & 0xFF);
 		//return bt[offset] & 0xFF;
 	}
+	
+	/*
+	   * This method inputs an array of bytes, and the starting offset index.
+	   * @returnthe integer transfered from the inputs bytes
+	   	*/
 	private int BytetoInt2(byte[] bt, int offset) {
 		return (int)((bt[offset] & 0x1F) << 8) | (bt[offset + 1] & 0xFF);
 		//return bt[offset] & 0xFF;
 	}
-	
+	/*
+	   * This method is for printing out the info
+	   * 
+	   	*/
 	public void PrintResult() {
 		System.out.println("IP: ----- IP Header ----- ");
 		System.out.println("IP:                          ");

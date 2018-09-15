@@ -1,22 +1,30 @@
+/* CSCI- 651 Computing Network
+ * 
+ * Project 1
+ * 
+ * Author: Zizhun Guo
+ * 
+ *  Part 4/5 (TCP Header)
+ * */
 class TCPHeader {
 	byte[] rawdata = null;
 	String[] hexdata = null;
-	int sp;
-	int dp;
-	int sn;
-	int an;
-	int dataOffset;
-	String Flags;
-	boolean urg = false;
-	boolean ack = false;
-	boolean psh = false;
-	boolean rst = false;
-	boolean syn = false;
-	boolean fin = false;
-	int window;
-	String checksum;
+	int sp;								// Source Port
+	int dp;								// Destination Port
+	int sn;								// Sequence Number
+	int an;								// Acknowledgement Number
+	int dataOffset;						// Data Offset
+	String Flags;						// Flag for 6 digits
+	boolean urg = false;				// Urgent Pointer
+	boolean ack = false;				// Acknoledgement
+	boolean psh = false;				// Push
+	boolean rst = false;				// Push
+	boolean syn = false;				// Syn
+	boolean fin = false;				// Fin
+	int window;							// Window
+	String checksum;					// Chescksum
 	String[] data;
-	int up;
+	int up;								// Urgent Pointer
 	
 	public TCPHeader(byte[] rawdataHeader, String[] HexdataHeader) {
 		this.rawdata = rawdataHeader;
@@ -48,15 +56,34 @@ class TCPHeader {
 		
 		
 	}
+	/*
+	   * This method inputs an array of bytes, and the starting offset index.
+	   * @returnthe 8-bit integer transfered from the inputs bytes
+	   	*/
 	public int BytetoInt8(byte[] bt, int offset) {
 		return bt[offset] & 0xff;
 	}
+	
+	/*
+	   * This method inputs an array of bytes, and the starting offset index.
+	   * @returnthe 16-bit integer transfered from the inputs bytes
+	   	*/
 	public int BytestoInt16(byte[] bt, int offset) {
 		return (int)(((bt[offset] & 0xFF) << 8) | (bt[offset+1] & 0xFF));
 	}
+	
+	/*
+	   * This method inputs an array of bytes, and the starting offset index.
+	   * @returnthe 32-bit integer transfered from the inputs bytes
+	   	*/
 	public int BytestoInt32(byte[] bt, int offset) {
 		return (int)(((bt[offset] & 0xff) << 24) | ((bt[offset+1] & 0xff) << 16) |((bt[offset+2] & 0xff) << 8) |(bt[offset+3] & 0xff)) ;
 	}
+	
+	/*
+	   * This method is for printing out the info
+	   * 
+	   	*/
 	public void PrintResult() {
 		System.out.println("TCP: ----- TCP Header ----- ");
 		System.out.println("TCP:                          ");

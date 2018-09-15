@@ -1,12 +1,20 @@
+/* CSCI- 651 Computing Network
+ * 
+ * Project 1
+ * 
+ * Author: Zizhun Guo
+ * 
+ *  Part 5/5 (UDP Header)
+ * */
 import javax.naming.spi.DirStateFactory.Result;
 
 class UDPHeader {
 	byte[] rawdata = null;
 	String[] hexdata = null;
-	int sp;
-	int dp;
-	int length;
-	String checksum;
+	int sp;										// Source Port
+	int dp;										// Destination Port
+	int length;									// Length
+	String checksum;							// Checksum
 	String[] data;
 	
 	public UDPHeader(byte[] rawdataHeader, String[] HexdataHeader) {
@@ -22,12 +30,27 @@ class UDPHeader {
 		}
 		
 	}
+	
+	/*
+	   * This method inputs an array of bytes, and the starting offset index.
+	   * @returnthe 16-bit integer transfered from the inputs bytes
+	   	*/
 	int BytestoInt16(byte[] bt, int offset) {
 		return (int)(((bt[offset] & 0xFF) << 8) | (bt[offset+1] & 0xFF));
 	}
+	
+	/*
+	   * This method inputs an array of bytes, and the starting offset index.
+	   * @return the 8-bit integer transfered from the inputs bytes
+	   	*/
 	int BytetoInt8(byte[] bt, int offset) {
 		return bt[offset] & 0xff;
 	}
+	
+	/*
+	   * This method is for printing out the info
+	   * 
+	   	*/
 	public void PrintResult(){
 		System.out.println("UDP: ----- UDP Header ----- ");
 		System.out.println("UDP:                          ");
